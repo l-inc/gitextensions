@@ -1287,7 +1287,7 @@ namespace GitUI.CommandsDialogs
         {
             if (_currentFilesList != Unstaged)
                 return;
-            Stage(Unstaged.SelectedItems.ToList());
+            Stage(Unstaged.SelectedItems.Where(s => !s.IsAssumeUnchanged && !s.IsSkipWorktree).ToList());
             if (Unstaged.IsEmpty)
                 Message.Focus();
         }
@@ -1302,7 +1302,7 @@ namespace GitUI.CommandsDialogs
 
         private void StageAllAccordingToFilter()
         {
-            Stage(Unstaged.GitItemFilteredStatuses);
+            Stage(Unstaged.GitItemFilteredStatuses.Where(s => !s.IsAssumeUnchanged && !s.IsSkipWorktree).ToList());
             Unstaged.SetFilter(String.Empty);
             if (Unstaged.IsEmpty)
                 Message.Focus();
