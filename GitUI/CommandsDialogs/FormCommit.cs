@@ -473,6 +473,7 @@ namespace GitUI.CommandsDialogs
             Func<IList<GitItemStatus>> getAllChangedFilesWithSubmodulesStatus = () => Module.GetAllChangedFilesWithSubmodulesStatus(
                     !showIgnoredFilesToolStripMenuItem.Checked,
                     !showAssumeUnchangedFilesToolStripMenuItem.Checked,
+                    !showSkipWorktreeFilesToolStripMenuItem.Checked,
                     showUntrackedFilesToolStripMenuItem.Checked ? UntrackedFilesMode.Default : UntrackedFilesMode.No);
 
             if (DoAsync)
@@ -1720,6 +1721,13 @@ namespace GitUI.CommandsDialogs
             RescanChanges();
         }
 
+        private void ShowSkipWorktreeFilesToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            showSkipWorktreeFilesToolStripMenuItem.Checked = !showSkipWorktreeFilesToolStripMenuItem.Checked;
+            doNotSkipWorktreeToolStripMenuItem.Visible = showSkipWorktreeFilesToolStripMenuItem.Checked;
+            RescanChanges();
+        }
+
         private void CommitMessageToolStripMenuItemDropDownOpening(object sender, EventArgs e)
         {
             commitMessageToolStripMenuItem.DropDownItems.Clear();
@@ -1853,6 +1861,31 @@ namespace GitUI.CommandsDialogs
             Initialize();
         }
 
+        private void SkipWorktreeToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (!Unstaged.SelectedItems.Any())
+                return;
+
+            SelectedDiff.Clear();
+
+            bool wereErrors;
+            Module.SkipWorktreeFiles(Unstaged.SelectedItems.ToList(), true, out wereErrors);
+
+            Initialize();
+        }
+
+        private void DoNotSkipWorktreeToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (!Unstaged.SelectedItems.Any())
+                return;
+
+            SelectedDiff.Clear();
+
+            bool wereErrors;
+            Module.SkipWorktreeFiles(Unstaged.SelectedItems.ToList(), false, out wereErrors);
+
+            Initialize();
+        }
         private void SelectedDiffExtraDiffArgumentsChanged(object sender, EventArgs e)
         {
             ShowChanges(_currentItem, _currentItemStaged);

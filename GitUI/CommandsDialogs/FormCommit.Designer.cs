@@ -38,6 +38,8 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.addFileTogitignoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.skipWorktreeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.doNotSkipWorktreeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.assumeUnchangedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.doNotAssumeUnchangedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
@@ -82,6 +84,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.workingToolStripMenuItem = new System.Windows.Forms.ToolStripDropDownButton();
             this.showIgnoredFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showSkipWorktreeFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showAssumeUnchangedFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showUntrackedFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -197,6 +200,8 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator5,
             this.addFileTogitignoreToolStripMenuItem,
             this.addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem,
+            this.skipWorktreeToolStripMenuItem,
+            this.doNotSkipWorktreeToolStripMenuItem,
             this.assumeUnchangedToolStripMenuItem,
             this.doNotAssumeUnchangedToolStripMenuItem,
             this.toolStripSeparator4,
@@ -321,6 +326,21 @@ namespace GitUI.CommandsDialogs
             this.addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
             this.addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem.Text = "Add file to .git/info/exclude";
             this.addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem.Click += new System.EventHandler(this.AddFileToGitInfoExcludeToolStripMenuItemClick);
+            // 
+            // skipWorktreeToolStripMenuItem
+            // 
+            this.skipWorktreeToolStripMenuItem.Name = "skipWorktreeToolStripMenuItem";
+            this.skipWorktreeToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+            this.skipWorktreeToolStripMenuItem.Text = "Skip worktree";
+            this.skipWorktreeToolStripMenuItem.Click += new System.EventHandler(this.SkipWorktreeToolStripMenuItemClick);
+            // 
+            // doNotSkipWorktreeToolStripMenuItem
+            // 
+            this.doNotSkipWorktreeToolStripMenuItem.Name = "doNotSkipWorktreeToolStripMenuItem";
+            this.doNotSkipWorktreeToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+            this.doNotSkipWorktreeToolStripMenuItem.Text = "Do not skip worktree";
+            this.doNotSkipWorktreeToolStripMenuItem.Visible = false;
+            this.doNotSkipWorktreeToolStripMenuItem.Click += new System.EventHandler(this.DoNotSkipWorktreeToolStripMenuItemClick);
             // 
             // assumeUnchangedToolStripMenuItem
             // 
@@ -718,6 +738,7 @@ namespace GitUI.CommandsDialogs
             this.workingToolStripMenuItem.AutoToolTip = false;
             this.workingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.showIgnoredFilesToolStripMenuItem,
+            this.showSkipWorktreeFilesToolStripMenuItem,
             this.showAssumeUnchangedFilesToolStripMenuItem,
             this.showUntrackedFilesToolStripMenuItem,
             this.toolStripSeparator3,
@@ -742,6 +763,13 @@ namespace GitUI.CommandsDialogs
             this.showIgnoredFilesToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
             this.showIgnoredFilesToolStripMenuItem.Text = "Show ignored files";
             this.showIgnoredFilesToolStripMenuItem.Click += new System.EventHandler(this.ShowIgnoredFilesToolStripMenuItemClick);
+            // 
+            // showSkipWorktreeFilesToolStripMenuItem
+            // 
+            this.showSkipWorktreeFilesToolStripMenuItem.Name = "showSkipWorktreeFilesToolStripMenuItem";
+            this.showSkipWorktreeFilesToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.showSkipWorktreeFilesToolStripMenuItem.Text = "Show skip-worktree files";
+            this.showSkipWorktreeFilesToolStripMenuItem.Click += new System.EventHandler(this.ShowSkipWorktreeFilesToolStripMenuItemClick);
             // 
             // showAssumeUnchangedFilesToolStripMenuItem
             // 
@@ -1464,6 +1492,8 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem assumeUnchangedToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem doNotAssumeUnchangedToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem skipWorktreeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem doNotSkipWorktreeToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openWithToolStripMenuItem;
@@ -1487,6 +1517,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripDropDownButton workingToolStripMenuItem;
         private ToolStripMenuItem showIgnoredFilesToolStripMenuItem;
         private ToolStripMenuItem showAssumeUnchangedFilesToolStripMenuItem;
+        private ToolStripMenuItem showSkipWorktreeFilesToolStripMenuItem;
         private ToolStripMenuItem showUntrackedFilesToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator3;
         private ToolStripMenuItem deleteSelectedFilesToolStripMenuItem;
