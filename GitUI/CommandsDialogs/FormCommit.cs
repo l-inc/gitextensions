@@ -115,6 +115,12 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _commitAuthorInfo = new TranslationString("Author");
         private readonly TranslationString _commitCommitterInfo = new TranslationString("Committer");
         private readonly TranslationString _commitCommitterToolTip = new TranslationString("Click to change committer information.");
+        private readonly TranslationString _skipWorktreeToolTip = new TranslationString("Hide already tracked files that will change but that you don\'t want to commit."
+            + Environment.NewLine + "Suitable for some config files modified locally.");
+        private readonly TranslationString _assumeUnchangedToolTip = new TranslationString("Tell git to not check the status of this file for performance benefits."
+            + Environment.NewLine + "Use this feature when a file is big and never change."
+            + Environment.NewLine + "Git will never check if the file has changed that will improve status check performance.");
+
         #endregion
 
         private FileStatusList _currentFilesList;
@@ -203,6 +209,8 @@ namespace GitUI.CommandsDialogs
             viewFileHistoryToolStripItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ShowHistory).ToShortcutKeyDisplayString();
             toolStripMenuItem6.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ShowHistory).ToShortcutKeyDisplayString();
             commitAuthorStatus.ToolTipText = _commitCommitterToolTip.Text;
+            skipWorktreeToolStripMenuItem.ToolTipText = _skipWorktreeToolTip.Text;
+            assumeUnchangedToolStripMenuItem.ToolTipText = _assumeUnchangedToolTip.Text;
             toolAuthor.Control.PreviewKeyDown += ToolAuthor_PreviewKeyDown;
         }
 
