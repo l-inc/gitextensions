@@ -10,9 +10,6 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormReflog : GitModuleForm
     {
-        private readonly TranslationString _continueResetCurrentBranchEvenWithChangesText = new TranslationString("You've got changes in your working directory that could be lost.\n\nDo you want to continue?");
-        private readonly TranslationString _continueResetCurrentBranchCaptionText = new TranslationString("Changes not committed...");
-
         private readonly Regex _regexReflog = new Regex("^([^ ]+) ([^:]+): (.+)$", RegexOptions.Compiled);
 
         private string _currentBranch;
@@ -111,19 +108,8 @@ namespace GitUI.CommandsDialogs
 
         private void resetCurrentBranchOnThisCommitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (_isDirtyDir)
-            {
-                if (MessageBox.Show(this, _continueResetCurrentBranchEvenWithChangesText.Text,
-                        _continueResetCurrentBranchCaptionText.Text,
-                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
-                {
-                    return;
-                }
-            }
-
             var gitRevision = UICommands.Module.GetRevision(GetShaOfRefLine());
-            var resetType = _isDirtyDir ? FormResetCurrentBranch.ResetType.Soft : FormResetCurrentBranch.ResetType.Hard;
-            var formResetCurrentBranch = new FormResetCurrentBranch(UICommands, gitRevision, resetType);
+            var formResetCurrentBranch = new FormResetCurrentBranch(UICommands, gitRevision, FormResetCurrentBranch.ResetType.Mixed);
             var result = formResetCurrentBranch.ShowDialog(this);
             ShouldRefresh = result == DialogResult.OK;
         }
@@ -156,7 +142,10 @@ namespace GitUI.CommandsDialogs
 
         private void gridReflog_MouseClick(object sender, MouseEventArgs e)
         {
-            contextMenuStripReflog.Show((Control)sender, e.Location);
+            if (e.Button == MouseButtons.Right)
+            {
+                contextMenuStripReflog.Show((Control)sender, e.Location);
+            }
         }
     }
 
