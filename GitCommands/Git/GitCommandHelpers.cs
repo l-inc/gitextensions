@@ -1088,6 +1088,26 @@ namespace GitCommands
             return result;
         }
 
+        public static List<GitItemStatus> GetSkipWorktreeFilesFromString(GitModule module, string lsString)
+        {
+            List<GitItemStatus> result = new List<GitItemStatus>();
+            string[] lines = lsString.SplitLines();
+            foreach (string line in lines)
+            {
+                char statusCharacter = line[0];
+
+                string fileName = line.Substring(line.IndexOf(' ') + 1);
+                GitItemStatus gitItemStatus = GitItemStatusFromStatusCharacter(fileName, statusCharacter);
+                if (gitItemStatus.IsSkipWorktree)
+                {
+                    gitItemStatus.IsStaged = false;
+                    result.Add(gitItemStatus);
+                }
+            }
+
+            return result;
+        }
+
         private static GitItemStatus GitItemStatusFromCopyRename(bool fromDiff, string nextfile, string fileName, char x, string status)
         {
             var gitItemStatus = new GitItemStatus();
@@ -1122,6 +1142,7 @@ namespace GitCommands
             gitItemStatus.IsNew = x == 'A' || x == '?' || x == '!';
             gitItemStatus.IsChanged = x == 'M';
             gitItemStatus.IsDeleted = x == 'D';
+            gitItemStatus.IsSkipWorktree = x == 'S';
             gitItemStatus.IsRenamed = false;
             gitItemStatus.IsTracked = x != '?' && x != '!' && x != ' ' || !gitItemStatus.IsNew;
             gitItemStatus.IsConflict = x == 'U';
