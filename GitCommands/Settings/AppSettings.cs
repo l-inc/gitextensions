@@ -482,6 +482,12 @@ namespace GitCommands
             set { SetString("iconstyle", value); }
         }
 
+        public static int DashboardThemeIndex
+        {
+            get { return GetInt("DashboardThemeIndex", -1); }
+            set { SetInt("DashboardThemeIndex", value); }
+        }
+
         /// <summary>
         /// Gets the size of the commit author avatar. Set to 80px.
         /// </summary>
@@ -1254,6 +1260,12 @@ namespace GitCommands
         {
             get { return GetInt("RecentReposComboMinWidth", 0); }
             set { SetInt("RecentReposComboMinWidth", value); }
+        }
+
+        public static int RecentReposGroupBy
+        {
+            get { return GetInt("RecentReposGroupBy", 0); }
+            set { SetInt("RecentReposGroupBy", value); }
         }
 
         public static string SerializedHotkeys

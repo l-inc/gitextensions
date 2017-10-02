@@ -1,5 +1,5 @@
 ﻿using System;
-using System.IO;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace GitCommands.Repository
@@ -39,10 +39,6 @@ namespace GitCommands.Repository
 
         public override void SetIcon()
         {
-            foreach (var recentRepository in Repositories)
-            {
-                recentRepository.RepositoryType = RepositoryType.History;
-            }
         }
 
         public void RemoveRecentRepository(string repo)
@@ -56,36 +52,30 @@ namespace GitCommands.Repository
             }
         }
 
-        public void AddMostRecentRepository(string repo)
+        public void AddMostRecentRepository(string repositoryPath)
         {
-            if (string.IsNullOrEmpty(repo))
-                return;
-
-            repo = repo.Trim();
-
-            if (string.IsNullOrEmpty(repo))
-                return;
-
-            if (!Repository.PathIsUrl(repo))
+            repositoryPath = repositoryPath?.Trim();
+            if (string.IsNullOrWhiteSpace(repositoryPath))
             {
-                repo = repo.ToNativePath().EnsureTrailingPathSeparator();
+                return;
             }
 
-            Repository.RepositoryAnchor anchor = Repository.RepositoryAnchor.None;
-            foreach (var recentRepository in Repositories)
+            if (!Repository.PathIsUrl(repositoryPath))
             {
-                if (!recentRepository.Path.Equals(repo, StringComparison.CurrentCultureIgnoreCase))
-                    continue;
-                anchor = recentRepository.Anchor;
+                repositoryPath = repositoryPath.ToNativePath().EnsureTrailingPathSeparator();
+            }
+
+            var recentRepository = Repositories.FirstOrDefault(r => r.Path.Equals(repositoryPath, StringComparison.CurrentCultureIgnoreCase));
+            if (recentRepository != null)
+            {
                 Repositories.Remove(recentRepository);
-                break;
+                Repositories.Insert(0, recentRepository);
+                recentRepository.Anchor = Repository.RepositoryAnchor.MostRecent;
             }
-
-            var repository = new Repository(repo, null, null) {
-                RepositoryType = RepositoryType.History,
-                Anchor = anchor
-            };
-            Repositories.Insert(0, repository);
+            else
+            {
+                Repositories.Insert(0, new Repository(repositoryPath));
+            }
 
             while (MaxCount > 0 && Repositories.Count > MaxCount)
             {

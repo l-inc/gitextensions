@@ -28,16 +28,13 @@ namespace GitCommands.Repository
                 Caption = Repo.Path;
             }
 
-            if (Repo.Title != null)
-                ShortName = Repo.Title;
-            else if (DirInfo != null)
-                ShortName = DirInfo.Name;
-
-
             if (DirInfo != null)
+            {
+                ShortName = DirInfo.Name;
                 DirInfo = DirInfo.Parent;
+            }
 
-            DirName = DirInfo == null ? "" : DirInfo.FullName;
+            DirName = DirInfo?.FullName ?? "";
         }
 
         public bool FullPath
@@ -103,7 +100,7 @@ namespace GitCommands.Repository
             }
             int r = mostRecentRepos.Count - 1;
             //remove not anchored repos if there is more than maxRecentRepositories repos
-            while (mostRecentRepos.Count > n && r >= 0 )
+            while (mostRecentRepos.Count > n && r >= 0)
             {
                 var repo = mostRecentRepos[r];
                 if (repo.Repo.Anchor == Repository.RepositoryAnchor.MostRecent)
@@ -115,7 +112,7 @@ namespace GitCommands.Repository
                 }
             }
 
-            Action<bool, List<RecentRepoInfo>> addSortedRepos = delegate(bool mostRecent, List<RecentRepoInfo> addToList)
+            Action<bool, List<RecentRepoInfo>> addSortedRepos = delegate (bool mostRecent, List<RecentRepoInfo> addToList)
             {
                 foreach (string caption in orderedRepos.Keys)
                 {
@@ -126,7 +123,7 @@ namespace GitCommands.Repository
                 }
             };
 
-            Action<List<RecentRepoInfo>, List<RecentRepoInfo>> addNotSortedRepos = delegate(List<RecentRepoInfo> list, List<RecentRepoInfo> addToList)
+            Action<List<RecentRepoInfo>, List<RecentRepoInfo>> addNotSortedRepos = delegate (List<RecentRepoInfo> list, List<RecentRepoInfo> addToList)
             {
                 foreach (RecentRepoInfo repo in list)
                     addToList.Add(repo);
@@ -201,10 +198,15 @@ namespace GitCommands.Repository
         private void AddToOrderedMiddleDots(SortedList<string, List<RecentRepoInfo>> orderedRepos, RecentRepoInfo repoInfo)
         {
             DirectoryInfo dirInfo;
-
             try
             {
                 dirInfo = new DirectoryInfo(repoInfo.Repo.Path);
+                if (!string.Equals(dirInfo.FullName, repoInfo.Repo.Path, StringComparison.OrdinalIgnoreCase))
+                {
+                    // this is likely to happen when attempting to interpret windows paths on linux
+                    // e.g. dirInfo = DirectoryInfo("c:\\temp") -> dirInfo => /usr/home/temp
+                    dirInfo = null;
+                }
             }
             catch (Exception)
             {
@@ -214,21 +216,13 @@ namespace GitCommands.Repository
             if (dirInfo == null)
             {
                 repoInfo.Caption = repoInfo.Repo.Path;
-                if (repoInfo.Caption.IsNullOrEmpty())
-                {
-                    repoInfo.Caption = repoInfo.Repo.Title ?? string.Empty;
-                }
             }
             else
             {
-
                 string root = null;
                 string company = null;
                 string repository = null;
-                string workingDir = null;
-
-
-                workingDir = dirInfo.Name;
+                string workingDir = dirInfo.Name;
                 dirInfo = dirInfo.Parent;
                 if (dirInfo != null)
                 {
@@ -249,7 +243,7 @@ namespace GitCommands.Repository
                         root = dirInfo.Parent.Name;
                 }
 
-                Func<int, bool> shortenPathWithCompany = delegate(int skipCount)
+                Func<int, bool> shortenPathWithCompany = delegate (int skipCount)
                 {
                     bool result = false;
                     string c = null;
@@ -283,7 +277,7 @@ namespace GitCommands.Repository
                 };
 
 
-                Func<int, bool> shortenPath = delegate(int skipCount)
+                Func<int, bool> shortenPath = delegate (int skipCount)
                 {
                     string path = repoInfo.Repo.Path;
                     string fistDir = (root ?? company) ?? repository;

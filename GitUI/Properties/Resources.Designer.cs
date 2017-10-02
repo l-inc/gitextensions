@@ -63,6 +63,16 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap _78 {
+            get {
+                object obj = ResourceManager.GetObject("78", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap AddBranch {
             get {
                 object obj = ResourceManager.GetObject("AddBranch", resourceCulture);
@@ -146,6 +156,26 @@ namespace GitUI.Properties {
         internal static System.Drawing.Bitmap bash {
             get {
                 object obj = ResourceManager.GetObject("bash", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap bgblue {
+            get {
+                object obj = ResourceManager.GetObject("bgblue", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap bggrey {
+            get {
+                object obj = ResourceManager.GetObject("bggrey", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -252,6 +282,27 @@ namespace GitUI.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to Changelog
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap bullet_add {
+            get {
+                object obj = ResourceManager.GetObject("bullet_add", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap bullet_delete {
+            get {
+                object obj = ResourceManager.GetObject("bullet_delete", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 
         ///=========
         ///### Version 2.49 (no due date)
         ///* Cherry pick selected file/selected lines.
@@ -585,6 +636,36 @@ namespace GitUI.Properties {
         internal static System.Drawing.Bitmap Folder {
             get {
                 object obj = ResourceManager.GetObject("Folder", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap folder_error {
+            get {
+                object obj = ResourceManager.GetObject("folder_error", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap folder_git {
+            get {
+                object obj = ResourceManager.GetObject("folder_git", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap git_extensions_logo {
+            get {
+                object obj = ResourceManager.GetObject("git_extensions_logo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1981,6 +2062,16 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap SettingsBw {
+            get {
+                object obj = ResourceManager.GetObject("SettingsBw", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap showEntireFile {
             get {
                 object obj = ResourceManager.GetObject("showEntireFile", resourceCulture);
@@ -2008,6 +2099,18 @@ namespace GitUI.Properties {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap StarBw
+        {
+            get
+            {
+                object obj = ResourceManager.GetObject("StarBw", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
@@ -2137,6 +2240,16 @@ namespace GitUI.Properties {
             get {
                 object obj = ResourceManager.GetObject("x_with_arrow", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap x_with_arrow_32 {
+            get {
+                object obj = ResourceManager.GetObject("x_with_arrow_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

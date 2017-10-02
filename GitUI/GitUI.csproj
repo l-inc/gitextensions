@@ -39,6 +39,8 @@
     </TargetFrameworkProfile>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <ReleaseVersion>
+    </ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -69,7 +71,6 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
@@ -118,6 +119,15 @@
     <Compile Include="CommandsDialogs\AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardTheme.cs" />
+    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\RecentRepositoriesList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\RecentRepositoriesList.Designer.cs">
+      <DependentUpon>RecentRepositoriesList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\RecentRepositoryListController.cs" />
+    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\RepositoryEventArgs.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\FormOpenDirectory.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -620,24 +630,6 @@
     <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\Dashboard.Designer.cs">
       <DependentUpon>Dashboard.cs</DependentUpon>
     </Compile>
-    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardCategory.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardCategory.Designer.cs">
-      <DependentUpon>DashboardCategory.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardEditor.Designer.cs">
-      <DependentUpon>DashboardEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardItem.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardItem.Designer.cs">
-      <DependentUpon>DashboardItem.cs</DependentUpon>
-    </Compile>
     <Compile Include="UserControls\RevisionGridClasses\DvcsGraph.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -755,12 +747,6 @@
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\SshSettingsPage.Designer.cs">
       <DependentUpon>SshSettingsPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="CommandsDialogs\SettingsDialog\Pages\StartPageSettingsPage.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CommandsDialogs\SettingsDialog\Pages\StartPageSettingsPage.Designer.cs">
-      <DependentUpon>StartPageSettingsPage.cs</DependentUpon>
-    </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\Plugins\PluginSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -866,12 +852,6 @@
     </Compile>
     <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\FormDashboardCategoryTitle.Designer.cs">
       <DependentUpon>FormDashboardCategoryTitle.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\FormDashboardEditor.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\FormDashboardEditor.Designer.cs">
-      <DependentUpon>FormDashboardEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\FormDeleteBranch.cs">
       <SubType>Form</SubType>
@@ -1144,6 +1124,9 @@
       <DependentUpon>AboutBox.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\BrowseDialog\DashboardControl\RecentRepositoriesList.resx">
+      <DependentUpon>RecentRepositoriesList.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\BrowseDialog\FormOpenDirectory.resx">
       <DependentUpon>FormOpenDirectory.cs</DependentUpon>
     </EmbeddedResource>
@@ -1328,18 +1311,6 @@
       <DependentUpon>Dashboard.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardCategory.resx">
-      <DependentUpon>DashboardCategory.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardEditor.resx">
-      <DependentUpon>DashboardEditor.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardItem.resx">
-      <DependentUpon>DashboardItem.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="UserControls\GotoUserManualControl.resx">
       <DependentUpon>GotoUserManualControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -1411,9 +1382,6 @@
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\SshSettingsPage.resx">
       <DependentUpon>SshSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\StartPageSettingsPage.resx">
-      <DependentUpon>StartPageSettingsPage.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Plugins\PluginSettingsPage.resx">
       <DependentUpon>PluginSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
@@ -1477,10 +1445,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\BrowseDialog\DashboardControl\FormDashboardCategoryTitle.resx">
       <DependentUpon>FormDashboardCategoryTitle.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\BrowseDialog\DashboardControl\FormDashboardEditor.resx">
-      <DependentUpon>FormDashboardEditor.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\FormDeleteBranch.resx">
@@ -1624,7 +1588,6 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <CustomToolNamespace>GitUI.Properties</CustomToolNamespace>
-      <LogicalName>GitUI.Properties.Resources.resources</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\RevisionGrid.resx">
       <DependentUpon>RevisionGrid.cs</DependentUpon>
@@ -1932,6 +1895,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Icons\14.png" />
+    <Content Include="Resources\Icons\14_bw.png" />
     <Content Include="Resources\Icons\2.png" />
     <Content Include="Resources\Icons\21.png" />
     <Content Include="Resources\Icons\24.png" />
@@ -1942,14 +1906,22 @@
     <Content Include="Resources\Icons\52.png" />
     <Content Include="Resources\Icons\53.png" />
     <Content Include="Resources\Icons\6.png" />
+    <Content Include="Resources\Icons\78.png" />
     <Content Include="Resources\Icons\8.png" />
     <Content Include="Resources\Icons\86.png" />
     <Content Include="Resources\Icons\90.png" />
+    <Content Include="Resources\Icons\bgblue.png" />
+    <Content Include="Resources\Icons\bggrey.png" />
     <Content Include="Resources\Icons\BuildCancelled.png" />
     <Content Include="Resources\Icons\BuildFailed.png" />
     <Content Include="Resources\Icons\BuildSuccessful.png" />
+    <Content Include="Resources\Icons\bullet_add.png" />
+    <Content Include="Resources\Icons\bullet_delete.png" />
     <Content Include="Resources\Icons\decrease.png" />
+    <Content Include="Resources\Icons\folder_error.png" />
+    <Content Include="Resources\Icons\folder_git.png" />
     <Content Include="Resources\Icons\gitex.png" />
+    <Content Include="Resources\Icons\git_extensions_logo.png" />
     <Content Include="Resources\Icons\HelpCommandMerge.png" />
     <Content Include="Resources\Icons\HelpCommandRebase.png" />
     <Content Include="Resources\Icons\HelpPullFetch.png" />
@@ -1970,6 +1942,7 @@
     <Content Include="Resources\Icons\light_bulb_icon_off_16.png" />
     <Content Include="Resources\Icons\light_bulb_icon_on_16.png" />
     <Content Include="Resources\Icons\whitespace.png" />
+    <Content Include="Resources\Icons\x_with_arrow_32.png" />
     <Content Include="Resources\Icons\CollapseAll.png" />
     <Content Include="Resources\Icons\ExpandAll.png" />
     <Content Include="Resources\Icons\StashesClear.png" />

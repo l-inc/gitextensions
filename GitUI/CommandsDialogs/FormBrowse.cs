@@ -359,27 +359,29 @@ namespace GitUI.CommandsDialogs
 
         private void ShowDashboard()
         {
+            toolPanel.Panel1Collapsed = true;
+            MainSplitContainer.Visible = false;
+
             if (_dashboard == null)
             {
                 _dashboard = new Dashboard();
                 _dashboard.GitModuleChanged += SetGitModule;
                 toolPanel.Panel2.Controls.Add(_dashboard);
                 _dashboard.Dock = DockStyle.Fill;
-                _dashboard.SetSplitterPositions();
             }
-            else
-                _dashboard.Refresh();
+
             _dashboard.Visible = true;
             _dashboard.BringToFront();
-            _dashboard.ShowRecentRepositories();
+            _dashboard.RefreshContent();
         }
 
         private void HideDashboard()
         {
             if (_dashboard != null && _dashboard.Visible)
             {
-                _dashboard.SaveSplitterPositions();
                 _dashboard.Visible = false;
+                toolPanel.Panel1Collapsed = false;
+                MainSplitContainer.Visible = true;
             }
         }
 
@@ -510,6 +512,7 @@ namespace GitUI.CommandsDialogs
         /// <summary>Refreshes the UI.</summary>
         private void InternalInitialize(bool hard)
         {
+            toolPanel.SuspendLayout();
             Cursor.Current = Cursors.WaitCursor;
 
             UICommands.RaisePreBrowseInitialize(this);
@@ -629,6 +632,7 @@ namespace GitUI.CommandsDialogs
             UICommands.RaisePostBrowseInitialize(this);
 
             Cursor.Current = Cursors.Default;
+            toolPanel.ResumeLayout();
         }
 
         private void OnActivate()
@@ -704,18 +708,7 @@ namespace GitUI.CommandsDialogs
         private static String GetRepositoryShortName(string repositoryDir)
         {
             DirectoryInfo dirInfo = new DirectoryInfo(repositoryDir);
-            if (dirInfo.Exists)
-            {
-                string desc = ReadRepositoryDescription(repositoryDir);
-                if (desc.IsNullOrEmpty())
-                {
-                    desc = Repositories.RepositoryHistory.Repositories
-                        .Where(repo => repo.Path.Equals(repositoryDir, StringComparison.CurrentCultureIgnoreCase)).Select(repo => repo.Title)
-                        .FirstOrDefault();
-                }
-                return desc ?? dirInfo.Name;
-            }
-            return dirInfo.Name;
+            return (dirInfo.Exists) ? dirInfo.Name : repositoryDir;
         }
 
         /// <summary>Updates the UI with the correct userscript(s).</summary>
@@ -1267,7 +1260,7 @@ namespace GitUI.CommandsDialogs
 
         private void RefreshDashboardToolStripMenuItemClick(object sender, EventArgs e)
         {
-            _dashboard.Refresh();
+            _dashboard.RefreshContent();
         }
 
         private void AboutToolStripMenuItemClick(object sender, EventArgs e)
@@ -1379,6 +1372,7 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.ReloadTranslation();
             fileTree.ReloadHotkeys();
             DiffText.ReloadHotkeys();
+            _dashboard?.RefreshContent();
         }
 
         private void TagToolStripMenuItemClick(object sender, EventArgs e)
@@ -1705,11 +1699,6 @@ namespace GitUI.CommandsDialogs
         {
             Repositories.RepositoryHistory.Repositories.Clear();
             Repositories.SaveSettings();
-            // Force clear recent repositories list from dashboard.
-            if (this._dashboard != null)
-            {
-                _dashboard.ShowRecentRepositories();
-            }
         }
 
         private void PluginSettingsToolStripMenuItemClick(object sender, EventArgs e)
@@ -1804,7 +1793,7 @@ namespace GitUI.CommandsDialogs
 
             toolStripItem.Click += (hs, he) => ChangeWorkingDir(repo.Path);
 
-            if (repo.Title != null || !repo.Path.Equals(caption))
+            if (!repo.Path.Equals(caption))
                 toolStripItem.ToolTipText = repo.Path;
         }
 
@@ -2362,8 +2351,6 @@ namespace GitUI.CommandsDialogs
         {
             base.OnClosing(e);
             SaveSplitterPositions();
-            if (_dashboard != null && _dashboard.Visible)
-                _dashboard.SaveSplitterPositions();
             try
             {
                 var settings = Properties.Settings.Default;
