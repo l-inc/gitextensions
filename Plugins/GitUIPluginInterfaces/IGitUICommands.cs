@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using GitUIPluginInterfaces.Notifications;
 
 namespace GitUIPluginInterfaces
 {
@@ -104,6 +105,8 @@ namespace GitUIPluginInterfaces
         IGitRemoteCommand CreateRemoteCommand();
         void CacheAvatar(string email);
         Icon FormIcon { get; }
+        /// <summary>Gets notifications implementation.</summary>
+        INotifications Notifications { get; }
         IBrowseRepo BrowseRepo { get; }
         /// <summary>
         /// RepoChangedNotifier.Notify() should be called after each action that changess repo state

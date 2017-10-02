@@ -25,7 +25,9 @@ using GitUI.UserControls.RevisionGridClasses;
 using GitUIPluginInterfaces;
 using Microsoft.Win32;
 using ResourceManager;
+using SaveFileDialog = System.Windows.Forms.SaveFileDialog;
 using Settings = GitCommands.AppSettings;
+using System.Configuration;
 #if !__MonoCS__
 using Microsoft.WindowsAPICodePack.Taskbar;
 #endif
@@ -156,6 +158,7 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             Translate();
+            RecoverSplitterContainerLayout();
         }
 
         public FormBrowse(GitUICommands aCommands, string filter)
@@ -179,13 +182,19 @@ namespace GitUI.CommandsDialogs
             }
             DiffFiles.FilterVisible = true;
             DiffFiles.DescribeRevision = DescribeRevision;
-            RevisionGrid.UICommandsSource = this;
+            if (aCommands != null)
+            {
+                RevisionGrid.UICommandsSource = this;
+                repoObjectsTree.UICommandsSource = this;
+            }
             Repositories.LoadRepositoryHistoryAsync();
             Task.Factory.StartNew(PluginLoader.Load)
                 .ContinueWith((task) => RegisterPlugins(), TaskScheduler.FromCurrentSynchronizationContext());
             RevisionGrid.GitModuleChanged += SetGitModule;
+            RevisionGrid.OnToggleLeftPanelRequested = () => toggleLeftPanel_Click(null, null);
             _filterRevisionsHelper = new FilterRevisionsHelper(toolStripRevisionFilterTextBox, toolStripRevisionFilterDropDownButton, RevisionGrid, toolStripRevisionFilterLabel, ShowFirstParent, form: this);
             _filterBranchHelper = new FilterBranchHelper(toolStripBranchFilterComboBox, toolStripBranchFilterDropDownButton, RevisionGrid);
+            repoObjectsTree.FilterBranchHelper = _filterBranchHelper;
             toolStripBranchFilterComboBox.DropDown += toolStripBranches_DropDown_ResizeDropDownWidth;
 
             Translate();
@@ -220,6 +229,7 @@ namespace GitUI.CommandsDialogs
             this.HotkeysEnabled = true;
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             this.toolPanel.SplitterDistance = this.ToolStrip.Height;
+
             GitUICommandsChanged += (a, e) =>
             {
                 var oldcommands = e.OldCommands;
@@ -229,6 +239,7 @@ namespace GitUI.CommandsDialogs
                 oldcommands.BrowseRepo = null;
                 UICommands.BrowseRepo = this;
             };
+
             if (aCommands != null)
             {
                 RefreshPullIcon();
@@ -246,6 +257,7 @@ namespace GitUI.CommandsDialogs
 
             FillTerminalTab();
             ManageWorktreeSupport();
+            RecoverSplitterContainerLayout();
         }
 
         private string DescribeRevision(string sha1)
@@ -394,7 +406,6 @@ namespace GitUI.CommandsDialogs
 
             Cursor.Current = Cursors.Default;
 
-
             try
             {
                 if (Settings.PlaySpecialStartupSound)
@@ -496,6 +507,7 @@ namespace GitUI.CommandsDialogs
             menuStrip1.Refresh();
         }
 
+        /// <summary>Refreshes the UI.</summary>
         private void InternalInitialize(bool hard)
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -602,6 +614,7 @@ namespace GitUI.CommandsDialogs
             // load custom user menu
             LoadUserMenu();
 
+            repoObjectsTree.Reload();
             if (validWorkingDir)
             {
                 // add Navigate and View menu
@@ -705,6 +718,7 @@ namespace GitUI.CommandsDialogs
             return dirInfo.Name;
         }
 
+        /// <summary>Updates the UI with the correct userscript(s).</summary>
         private void LoadUserMenu()
         {
             var scripts = ScriptManager.GetScripts().Where(script => script.Enabled
@@ -876,6 +890,7 @@ namespace GitUI.CommandsDialogs
             return Icon.FromHandle(square.GetHicon());
         }
 
+        /// <summary>Updates the UI with the correct stash count.</summary>
         private void UpdateStashCount()
         {
             if (Settings.ShowStashCount)
@@ -896,7 +911,6 @@ namespace GitUI.CommandsDialogs
 
             if (validWorkingDir && Module.InTheMiddleOfBisect())
             {
-
                 if (_bisect == null)
                 {
                     _bisect = new WarningToolStripItem { Text = _warningMiddleOfBisect.Text };
@@ -1328,7 +1342,7 @@ namespace GitUI.CommandsDialogs
 
         private void DeleteBranchToolStripMenuItemClick(object sender, EventArgs e)
         {
-            UICommands.StartDeleteBranchDialog(this, null);
+            UICommands.StartDeleteBranchDialog(this, string.Empty);
         }
 
         private void DeleteTagToolStripMenuItemClick(object sender, EventArgs e)
@@ -2206,15 +2220,15 @@ namespace GitUI.CommandsDialogs
 
         private void toggleSplitViewLayout_Click(object sender, EventArgs e)
         {
-            EnabledSplitViewLayout(MainSplitContainer.Panel2.Height == 0 && MainSplitContainer.Height > 0);
+            EnabledSplitViewLayout(RightSplitContainer.Panel2.Height == 0 && RightSplitContainer.Height > 0);
         }
 
         private void EnabledSplitViewLayout(bool enabled)
         {
             if (enabled)
-                MainSplitContainer.SplitterDistance = (MainSplitContainer.Height / 5) * 2;
+                RightSplitContainer.SplitterDistance = (RightSplitContainer.Height / 5) * 2;
             else
-                MainSplitContainer.SplitterDistance = MainSplitContainer.Height;
+                RightSplitContainer.SplitterDistance = RightSplitContainer.Height;
         }
 
         private int getNextIdx(int curIdx, int maxIdx, bool searchBackward)
@@ -2350,6 +2364,18 @@ namespace GitUI.CommandsDialogs
             SaveSplitterPositions();
             if (_dashboard != null && _dashboard.Visible)
                 _dashboard.SaveSplitterPositions();
+            try
+            {
+                var settings = Properties.Settings.Default;
+                settings.FormBrowse_DiffSplitContainer_SplitterDistance = DiffSplitContainer.SplitterDistance;
+                settings.FormBrowse_MainSplitContainer_SplitterDistance = MainSplitContainer.SplitterDistance;
+                settings.FormBrowse_LeftPanel_Collapsed = MainSplitContainer.Panel1Collapsed;
+                settings.Save();
+            }
+            catch (ConfigurationException)
+            {
+                //TODO: howto restore a corrupted config? Properties.Settings.Default.Reset() doesn't work.
+            }
         }
 
         protected override void OnClosed(EventArgs e)
@@ -3090,7 +3116,6 @@ namespace GitUI.CommandsDialogs
         {
             Process.Start(@"https://github.com/gitextensions/gitextensions/issues/new");
         }
-
         private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var updateForm = new FormUpdates(Module.AppVersion);
@@ -3330,9 +3355,21 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        private void toggleLeftPanel_Click(object sender, EventArgs e)
+        {
+            MainSplitContainer.Panel1Collapsed = !MainSplitContainer.Panel1Collapsed;
+        }
+
+        private void RecoverSplitterContainerLayout()
+        {
+            var settings = Properties.Settings.Default;
+            DiffSplitContainer.SplitterDistance = settings.FormBrowse_DiffSplitContainer_SplitterDistance;
+            MainSplitContainer.SplitterDistance = settings.FormBrowse_MainSplitContainer_SplitterDistance;
+            MainSplitContainer.Panel1Collapsed = settings.FormBrowse_LeftPanel_Collapsed;
+        }
+
         private void manageWorktreeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
             var formManageWorktree = new FormManageWorktree(UICommands);
             formManageWorktree.ShowDialog(this);
         }
