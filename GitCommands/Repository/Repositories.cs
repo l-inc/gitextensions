@@ -164,14 +164,12 @@ namespace GitCommands.Repository
                 {
                     using (var xmlReader = new XmlTextReader(stringReader))
                     {
-                        var repos = serializer.Deserialize(xmlReader) as BindingList<RepositoryCategory>;
-                        if (repos != null)
+                        repositories = serializer.Deserialize(xmlReader) as BindingList<RepositoryCategory>;
+                        if (repositories != null)
                         {
-                            repositories = new BindingList<RepositoryCategory>();
-                            foreach (var repositoryCategory in repos.Where(r => r.CategoryType == RepositoryCategoryType.Repositories))
+                            foreach (var repositoryCategory in repositories)
                             {
                                 repositoryCategory.SetIcon();
-                                repositories.Add(repositoryCategory);
                             }
                         }
                     }
