@@ -114,7 +114,7 @@ namespace GitUI
             _globalIgnoreWatcher.Renamed += GlobalIgnoreChanged;
             _globalIgnoreWatcher.Error += WorkTreeWatcherError;
             _globalIgnoreWatcher.IncludeSubdirectories = false;
-            _workTreeWatcher.NotifyFilter = NotifyFilters.LastWrite;
+            _globalIgnoreWatcher.NotifyFilter = NotifyFilters.LastWrite;
         }
 
         private void GlobalIgnoreChanged(object sender, FileSystemEventArgs e)
