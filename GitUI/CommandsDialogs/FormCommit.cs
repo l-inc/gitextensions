@@ -1003,7 +1003,8 @@ namespace GitUI.CommandsDialogs
                 bool pushCompleted = true;
                 if (push)
                 {
-                    UICommands.StartPushDialog(this, true, out pushCompleted);
+                    bool pushForced = AppSettings.CommitAndPushForcedWhenAmend && amend;
+                    UICommands.StartPushDialog(this, true, pushForced, out pushCompleted);
                 }
 
                 if (pushCompleted && Module.SuperprojectModule != null && AppSettings.StageInSuperprojectAfterCommit)
@@ -2684,6 +2685,15 @@ namespace GitUI.CommandsDialogs
             if (string.IsNullOrEmpty(Message.Text) && Amend.Checked)
             {
                 Message.Text = Module.GetPreviousCommitMessages(1).FirstOrDefault()?.Trim();
+            }
+            UpdateCommitAndPushButton();
+        }
+
+        private void UpdateCommitAndPushButton()
+        {
+            if (AppSettings.CommitAndPushForcedWhenAmend)
+            {
+                CommitAndPush.BackColor = Amend.Checked ? Color.Salmon : SystemColors.ButtonFace;
             }
         }
 
