@@ -45,6 +45,8 @@ namespace GitUI.CommandsDialogs
 
             advanced.Checked = AppSettings.AlwaysShowAdvOpt;
             advanced_CheckedChanged(null, null);
+
+            Branches.Select();
         }
 
 
