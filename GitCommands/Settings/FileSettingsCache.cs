@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -125,7 +126,13 @@ namespace GitCommands.Settings
         {
             try
             {
-                var tmpFile = SettingsFilePath + ".tmp";
+                int currentProcessId;
+                using (var currentProcess = Process.GetCurrentProcess())
+                {
+                    currentProcessId = currentProcess.Id;
+                }
+
+                var tmpFile = SettingsFilePath + currentProcessId + ".tmp";
 
                 if (!LastModificationDate.HasValue || (LastFileRead.HasValue
                         && LastModificationDate.Value < LastFileRead.Value))
